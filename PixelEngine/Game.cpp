@@ -39,7 +39,8 @@ DWORD WINAPI glSpeedUp(LPVOID param) {
 };
 #endif
 
-int Game::init(int argc, char *argv[]) {
+int Game::init(int argc, char *argv[])
+{
     if(clArgs->getBool("profiler")) {
         EASY_PROFILER_ENABLE;
         profiler::startListen();
@@ -110,6 +111,7 @@ int Game::init(int argc, char *argv[]) {
     std::future<void> initThread;
     ctpl::thread_pool* worldInitThreadPool = new ctpl::thread_pool(1);
     std::future<void> worldInitThread;
+
     // init fmod
     #pragma region
 
@@ -277,6 +279,8 @@ int Game::init(int argc, char *argv[]) {
     const char* glsl_version = "#version 130";
     ImGui_ImplOpenGL3_Init(glsl_version);
 
+    // Imgui colors
+    #pragma region
     ImGui::StyleColorsClassic();
     ImGui::GetStyle().WindowTitleAlign = ImVec2(0.5f, 0.5f);
     ImVec4* colors = ImGui::GetStyle().Colors;
@@ -328,6 +332,7 @@ int Game::init(int argc, char *argv[]) {
     colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
     colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
     colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+#pragma endregion
 
     // load splash screen
     #pragma region
@@ -372,7 +377,6 @@ int Game::init(int argc, char *argv[]) {
     EASY_END_BLOCK;
     #pragma endregion
 
-
     // init the world
     #pragma region
     // calls IMG_Load and SDL_ConvertSurfaceFormat which I think are thread safe but not actually sure
@@ -386,7 +390,6 @@ int Game::init(int argc, char *argv[]) {
         EASY_END_BLOCK;
     });
     #pragma endregion
-
 
     // init the background
     #pragma region
@@ -456,8 +459,6 @@ int Game::init(int argc, char *argv[]) {
 
     // load shaders
     loadShaders();
-
-
 
     EASY_EVENT("Done Loading", profiler::colors::Magenta);
     EASY_END_BLOCK;
@@ -957,7 +958,8 @@ int Game::run(int argc, char *argv[]) {
 
     // game loop
     EASY_EVENT("Start of Game Loop", profiler::colors::Magenta);
-    while(this->running) {
+    while(this->running)
+    {
         EASY_BLOCK("Frame", GAME_PROFILER_COLOR);
         now = Time::millis();
         deltaTime = now - lastTime;
@@ -1463,21 +1465,6 @@ int Game::run(int argc, char *argv[]) {
         DebugCheatsUI::Draw(this);
         MainMenuUI::Draw(this);
         IngameUI::Draw(this);
-        //  ImGui::ShowDemoWindow();
-
-        // 수정: in-game "Debug Info" gui창 비활성화
-        //if(DebugUI::visible) {
-        //    ImGui::Begin("Debug Info");
-        //    ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-        //    GPU_Renderer* renderer = GPU_GetCurrentRenderer();
-        //    GPU_RendererID id = renderer->id;
-
-        //    ImGui::Text("Using renderer: %s (%d.%d)\n", id.name, id.major_version, id.minor_version);
-        //    ImGui::Text("  Shader versions supported: %d to %d\n\n", renderer->min_shader_version, renderer->max_shader_version);
-
-        //    ImGui::End();
-        //}
 
         if(Settings::draw_material_info && !ImGui::GetIO().WantCaptureMouse) {
             EASY_BLOCK("draw material info", RENDER_PROFILER_COLOR);
@@ -1664,6 +1651,9 @@ int Game::run(int argc, char *argv[]) {
         #pragma endregion
     }
 
+
+
+
 exit:
     EASY_END_BLOCK; // frame??
 
@@ -1689,19 +1679,14 @@ exit:
     }
     EASY_END_BLOCK;
 
+
     // release resources & shutdown
-    #pragma region
     delete objectDelete;
-
     running = false;
-
     TTF_Quit();
-
     SDL_DestroyWindow(window);
     SDL_Quit();
-
     audioEngine.Shutdown();
-    #pragma endregion
 
     if(profiler::isEnabled()) {
         profiler::stopListen();

@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
         game->clArgs = new CLArgs(&result);
 
-        return game->init(argc, argv);
+        return game->init(argc, argv); // main -> Game::init -> Game::run
 
     } catch(const cxxopts::option_not_exists_exception& e) {
         std::cerr << "Invalid command line argument: " << e.what() << std::endl;

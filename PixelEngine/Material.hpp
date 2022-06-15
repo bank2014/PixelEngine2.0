@@ -32,14 +32,14 @@ public:
     int id = 0;
     int physicsType = 0;
     Uint8 alpha = 0;
-    float density = 0;
+    float density = 0;          //kg/m^3
     int iterations = 0;
     int emit = 0;
     Uint32 emitColor = 0;
     Uint32 color = 0;
     Uint32 addTemp = 0;
-    double conductivity = 0; // W/m¡¤K
-    double heat_capacity = 0; // cal/g¡¤K
+    double conductivity = 0;    // W/m*K
+    double heat_capacity = 0;   // cal/g*K
 
     bool interact = false;
     int* nInteractions = nullptr;
